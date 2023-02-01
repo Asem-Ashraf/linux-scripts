@@ -19,7 +19,7 @@ bindsym $mod+u border none
 bindsym $mod+y border pixel 1
 bindsym $mod+n border normal
 
-for_window [class="^.*"] border pixel 6
+for_window [class="^.*"] border pixel 3
 
 set $thick 16
 #border_radius 4
@@ -152,22 +152,23 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # Set shut down, restart and locking features
-bindsym $mod+p exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'         -B 'Lock' 'pkill i3-nagbar;i3exit lock;'       -B 'Log out' 'pkill i3-nagbar;i3exit logout'  -B 'Switch User' 'pkill i3-nagbar;i3exit switch_user'      -B 'Suspend' 'pkill i3-nagbar;i3exit suspend'      -B 'Hibernate' 'pkill i3-nagbar;i3exit hibernate'         -B 'Reboot' 'pkill i3-nagbar;i3exit reboot'           -B 'Shutdown' 'pkill i3-nagbar;i3exit shutdown'"
+# bindsym $mod+p exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'   -B 'Lock' 'pkill i3-nagbar;i3exit lock;'       -B 'Log out' 'pkill i3-nagbar;i3exit logout'  -B 'Switch User' 'pkill i3-nagbar;i3exit switch_user'      -B 'Suspend' 'pkill i3-nagbar;i3exit suspend'      -B 'Hibernate' 'pkill i3-nagbar;i3exit hibernate'         -B 'Reboot' 'pkill i3-nagbar;i3exit reboot'           -B 'Shutdown' 'pkill i3-nagbar;i3exit shutdown'      -B 'X' 'pkill i3-nagbar;i3 mode default'"
 
-bindsym $mod+0 mode "$mode_system"
+bindsym $mod+0 mode "$mode_system"  exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'         -B 'Lock' 'pkill i3-nagbar;i3 mode default;i3exit lock;'       -B 'Log out' 'pkill i3-nagbar;i3 mode default;i3exit logout;'  -B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;'      -B 'Suspend' 'pkill i3-nagbar;i3 mode default;i3exit suspend;'      -B 'Hibernate' 'pkill i3-nagbar;i3 mode default;i3exit hibernate;'         -B 'Reboot' 'pkill i3-nagbar;i3 mode default;i3exit reboot;'           -B 'Shutdown' 'pkill i3-nagbar;i3 mode default;i3exit shutdown;'           -B 'Do nothing' 'i3 mode default;pkill i3-nagbar;'"
+
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id i3exit lock, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
+    bindsym h exec --no-startup-id "sync && sudo sysctl -w vm.drop_caches=3 && sudo sysctl -w vm.drop_caches=2; i3exit hibernate;", mode "default"
     bindsym r exec --no-startup-id i3exit reboot, mode "default"
     bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
 
     # exit system mode: "Enter" or "Escape"
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
+    bindsym Return mode "default" exec --no-startup-id pkill i3-nagbar
+    bindsym Escape mode "default" exec --no-startup-id pkill i3-nagbar
 }
 
 
@@ -190,10 +191,11 @@ exec --no-startup-id redshift-gtk
 exec --no-startup-id sbxkb
 #exec --no-startup-id start_conky_maia
 #exec --no-startup-id start_conky_green
-exec --no-startup-id xautolock -time 10 -locker blurlock
+#exec --no-startup-id xautolock -time 10 -locker blurlock
 exec --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
-exec --no-startup-id "polybar -r"
+exec_always --no-startup-id "pkill polybar"
+exec_always --no-startup-id "sleep 1;polybar -r;"
 #exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 #exec --no-startup-id /usr/lib/gsd-xsettings
 #exec_always --no-startup-id gnome-power-manager
@@ -217,8 +219,8 @@ exec --no-startup-id sudo mount /dev/sda2 secHDD
 #############################
 
 # Set inner/outer gaps
-gaps inner 9
-gaps outer -2
+gaps inner 20
+gaps outer -3
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -343,10 +345,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym l resize shrink height 5 px or 5 ppt
-        bindsym semicolon resize grow width 5 px or 5 ppt
+        bindsym w resize shrink width 5 px or 5 ppt
+        bindsym shift+h resize grow height 5 px or 5 ppt
+        bindsym h resize shrink height 5 px or 5 ppt
+        bindsym shift+w resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize grow width 10 px or 10 ppt
