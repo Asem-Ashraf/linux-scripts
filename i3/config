@@ -1,11 +1,5 @@
-
-# Please see http://i3wm.org/docs/userguide.html for a complete reference!
-
 # Set mod key (Mod1=<Alt>, Mod4=<Super>)
 set $mod Mod4
-
-# set default desktop layout (default is tiling)
-# workspace_layout tabbed <stacking|tabbed>
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
 default_border pixel 2
@@ -14,54 +8,60 @@ default_floating_border none
 # Hide borders
 hide_edge_borders none
 
+################################################################################################
+## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
+################################################################################################
+
+exec --no-startup-id start-pulseaudio-x11
+exec --no-startup-id pa-applet
+bindsym Mod1+z exec --no-startup-id pavucontrol
+
+# Autostart applications
+exec --no-startup-id nitrogen --restore; sleep 1; picom -b
+exec --no-startup-id manjaro-hello
+exec --no-startup-id xfce4-power-manager
+exec --no-startup-id cmst
+exec --no-startup-id flameshot
+exec --no-startup-id clipit
+exec --no-startup-id picom
+exec --no-startup-id libinput-gestures-setup start
+exec --no-startup-id redshift-gtk
+exec --no-startup-id sbxkb
+exec --no-startup-id ff-theme-util
+exec_always --no-startup-id fix_xcursor
+exec_always --no-startup-id "pkill polybar;polybar -r;"
+
+# add the arabic language to the keyboard with win space to toggle between them.
+exec_always --no-startup-id bash ~/.config/set-multilingual-keyboard.sh
+
+#mount drive 
+exec --no-startup-id sudo mount /dev/sda2 secHDD
+
 # change borders
 bindsym $mod+u border none
 bindsym $mod+y border pixel 1
 bindsym $mod+n border normal
-
 for_window [class="^.*"] border pixel 3
-
 set $thick 16
-#border_radius 4
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
-# font arimo heavy 14
 
 # Use Mouse+$mod to drag floating windows
 floating_modifier $mod
 bindsym $mod+Return exec --no-startup-id alacritty
 
+# Lock screen
+bindsym $mod+9 exec --no-startup-id blurlock
 # kill focused window
 bindsym $mod+x kill
-
 # start program launcher
 bindsym $mod+d exec --no-startup-id dmenu_recency
-
 # launch categorized menu
 bindsym $mod+z exec --no-startup-id morc_menu
-
-################################################################################################
-## sound-section - DO NOT EDIT if you wish to automatically upgrade Alsa -> Pulseaudio later! ##
-################################################################################################
-
-#exec --no-startup-id volumeicon
-#bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
-exec --no-startup-id start-pulseaudio-x11
-exec --no-startup-id pa-applet
-bindsym Mod1+z exec --no-startup-id pavucontrol
-
-################################################################################################
-
-# Screen brightness controls
-# bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
-# bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'" 
 bindsym $mod+Ctrl+b exec --no-startup-id terminal -e 'bmenu' 
 bindsym $mod+F1 exec --no-startup-id brave 
 bindsym $mod+F2 exec --no-startup-id discord 
 bindsym $mod+F3 exec --no-startup-id thunar
 bindsym $mod+F4 exec --no-startup-id ~/messenger-linux-x64/messenger
 bindsym $mod+F5 exec --no-startup-id whatsapp-nativefier
-
 
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec --no-startup-id pcmanfm_pkexec 
@@ -73,7 +73,6 @@ bindsym Print exec --no-startup-id i3-scrot
 bindsym $mod+Print --release exec --no-startup-id i3-scrot -w 
 bindsym $mod+Shift+Print --release exec --no-startup-id i3-scrot -s 
 bindsym $mod+Shift+s --release exec --no-startup-id flameshot gui
-#bindsym $mod+Shift+h exec xdg-open /usr/share/doc/manjaro/i3_help.pdf 
 bindsym $mod+Ctrl+x --release exec --no-startup-id xkill # focus_follows_mouse no 
 bindsym $mod+h focus left 
 bindsym $mod+j focus down
@@ -151,20 +150,18 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# Set shut down, restart and locking features
-# bindsym $mod+p exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'   -B 'Lock' 'pkill i3-nagbar;i3exit lock;'       -B 'Log out' 'pkill i3-nagbar;i3exit logout'  -B 'Switch User' 'pkill i3-nagbar;i3exit switch_user'      -B 'Suspend' 'pkill i3-nagbar;i3exit suspend'      -B 'Hibernate' 'pkill i3-nagbar;i3exit hibernate'         -B 'Reboot' 'pkill i3-nagbar;i3exit reboot'           -B 'Shutdown' 'pkill i3-nagbar;i3exit shutdown'      -B 'X' 'pkill i3-nagbar;i3 mode default'"
-
-bindsym $mod+0 mode "$mode_system"  exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'         -B 'Lock' 'pkill i3-nagbar;i3 mode default;i3exit lock;'       -B 'Log out' 'pkill i3-nagbar;i3 mode default;i3exit logout;'  -B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;'      -B 'Suspend' 'pkill i3-nagbar;i3 mode default;i3exit suspend;'      -B 'Hibernate' 'pkill i3-nagbar;i3 mode default;i3exit hibernate;'         -B 'Reboot' 'pkill i3-nagbar;i3 mode default;i3exit reboot;'           -B 'Shutdown' 'pkill i3-nagbar;i3 mode default;i3exit shutdown;'           -B 'Do nothing' 'i3 mode default;pkill i3-nagbar;'"
+bindsym $mod+0 mode "$mode_system"  
+exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown' -B 'Lock' 'pkill i3-nagbar;i3 mode default;i3exit lock;' -B 'Log out' 'pkill i3-nagbar;i3 mode default;i3exit logout;' -B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;' -B 'Suspend' 'pkill i3-nagbar;i3 mode default;i3exit suspend;' -B 'Hibernate' 'pkill i3-nagbar;i3 mode default;i3exit hibernate;' -B 'Reboot' 'pkill i3-nagbar;i3 mode default;i3exit reboot;' -B 'Shutdown' 'pkill i3-nagbar;i3 mode default;i3exit shutdown;' -B 'Do nothing' 'i3 mode default;pkill i3-nagbar;'"
 
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id i3exit suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id "sync && sudo sysctl -w vm.drop_caches=3 && sudo sysctl -w vm.drop_caches=2; i3exit hibernate;", mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
+    bindsym l exec --no-startup-id "pkill i3-nagbar;i3exit lock;" mode "default"
+    bindsym s exec --no-startup-id "pkill i3-nagbar;i3exit suspend;" mode "default"
+    bindsym u exec --no-startup-id "pkill i3-nagbar;i3exit switch_user;" mode "default"
+    bindsym e exec --no-startup-id "pkill i3-nagbar;i3exit logout;" mode "default"
+    bindsym h exec --no-startup-id "pkill i3-nagbar;sync && sudo sysctl -w vm.drop_caches=3 && sudo sysctl -w vm.drop_caches=2; i3exit hibernate;", mode "default"
+    bindsym r exec --no-startup-id "pkill i3-nagbar;i3exit reboot", mode "default"
+    bindsym Shift+s exec --no-startup-id "pkill i3-nagbar;i3exit shutdown", mode "default"
 
     # exit system mode: "Enter" or "Escape"
     bindsym Return mode "default" exec --no-startup-id pkill i3-nagbar
@@ -172,47 +169,7 @@ mode "$mode_system" {
 }
 
 
-# Lock screen
-bindsym $mod+9 exec --no-startup-id blurlock
 
-# Autostart applications
-exec --no-startup-id nitrogen --restore; sleep 1; picom -b
-exec --no-startup-id manjaro-hello
-exec --no-startup-id xfce4-power-manager
-exec --no-startup-id cmst
-exec --no-startup-id flameshot
-#exec --no-startup-id pamac-tray
-exec --no-startup-id clipit
-exec --no-startup-id picom
-#exec --no-startup-id imwheel
-exec --no-startup-id redshift-gtk
-#exec --no-startup-id nm-applet
-#exec --no-startup-id blueman-applet
-exec --no-startup-id sbxkb
-#exec --no-startup-id start_conky_maia
-#exec --no-startup-id start_conky_green
-#exec --no-startup-id xautolock -time 10 -locker blurlock
-exec --no-startup-id ff-theme-util
-exec_always --no-startup-id fix_xcursor
-exec_always --no-startup-id "pkill polybar"
-exec_always --no-startup-id "sleep 1;polybar -r;"
-#exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-#exec --no-startup-id /usr/lib/gsd-xsettings
-#exec_always --no-startup-id gnome-power-manager
-#exec --no-startup-id gnome-flashback
-#exec --no-startup-id /usr/bin/gnome-screensaver
-
-# add the arabic language to the keyboard with win space to toggle between them.
-exec_always --no-startup-id bash ~/.config/set-multilingual-keyboard.sh
-#mount drive 
-exec --no-startup-id sudo mount /dev/sda2 secHDD
-#open pulseaudio system tray icon
-#exec --no-startup-id pasystray
-#exec --no-startup-id sh -c 'sleep 1;  i3-msg "workspace $ws1; exec brave"'
-#exec --no-startup-id sh -c 'sleep 2;  i3-msg "workspace $ws3; exec code"'
-#exec --no-startup-id sh -c 'sleep 0;  i3-msg "workspace $ws3; exec whatsapp-nativefier"'
-#exec --no-startup-id sh -c 'sleep 1;  i3-msg "workspace $ws4; exec messenger-nativefier"'
-#exec --no-startup-id sh -c 'sleep 5;  i3-msg "workspace $ws2; exec discord"'
 
 #############################
 ### settings for i3-gaps: ###

@@ -19,10 +19,13 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 alias ls='lsd -a'
 alias os='cd /home/asem/Sec/Faculty/STUDY\ GROUP/CS-537\ Introduction\ to\ Operating\ Systems'
+alias fac='cd /home/asem/Sec/Faculty'
 alias cls='clear'
-alias nim='nvim'
+# alias nim='nvim'
 alias download='sudo pacman -S'
-alias messenger='nohup ~/messenger-linux-x64/messenger;'
+alias update='sudo pacman -Syu'
+alias uninstall='sudo pacman -R'
+#alias messenger='nohup ~/messenger-linux-x64/messenger;'
 #auto completion
 autoload -U compinit
 zstyle ':completion:*' menu select
