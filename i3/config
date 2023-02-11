@@ -29,6 +29,7 @@ exec --no-startup-id redshift-gtk
 exec --no-startup-id sbxkb
 exec --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
+exec_always --no-startup-id "echo conservative | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
 exec_always --no-startup-id "pkill polybar;polybar -r;"
 
 # add the arabic language to the keyboard with win space to toggle between them.
@@ -150,8 +151,17 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-bindsym $mod+0 mode "$mode_system"  
-exec --no-startup-id "i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown' -B 'Lock' 'pkill i3-nagbar;i3 mode default;i3exit lock;' -B 'Log out' 'pkill i3-nagbar;i3 mode default;i3exit logout;' -B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;' -B 'Suspend' 'pkill i3-nagbar;i3 mode default;i3exit suspend;' -B 'Hibernate' 'pkill i3-nagbar;i3 mode default;i3exit hibernate;' -B 'Reboot' 'pkill i3-nagbar;i3 mode default;i3exit reboot;' -B 'Shutdown' 'pkill i3-nagbar;i3 mode default;i3exit shutdown;' -B 'Do nothing' 'i3 mode default;pkill i3-nagbar;'"
+bindsym $mod+0 mode "$mode_system" \
+exec --no-startup-id \
+"i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'\
+-B 'Lock'        'pkill i3-nagbar;i3 mode default;i3exit lock;' \
+-B 'Log out'     'pkill i3-nagbar;i3 mode default;i3exit logout;' \
+-B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;' \
+-B 'Suspend'     'pkill i3-nagbar;i3 mode default;i3exit suspend;' \
+-B 'Hibernate'   'pkill i3-nagbar;i3 mode default;i3exit hibernate;' \
+-B 'Reboot'      'pkill i3-nagbar;i3 mode default;i3exit reboot;' \
+-B 'Shutdown'    'pkill i3-nagbar;i3 mode default;i3exit shutdown;' \
+-B 'Do nothing'  'i3 mode default;pkill i3-nagbar;'\"
 
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
