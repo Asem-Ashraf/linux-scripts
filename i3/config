@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Configure border style <normal|1pixel|pixel xx|none|pixel>
-default_border pixel 2
+default_border pixel 3
 default_floating_border none
 
 # Hide borders
@@ -17,7 +17,7 @@ exec --no-startup-id pa-applet
 bindsym Mod1+z exec --no-startup-id pavucontrol
 
 # Autostart applications
-exec --no-startup-id nitrogen --restore; sleep 1; picom -b
+exec_always --no-startup-id nitrogen --restore
 exec --no-startup-id manjaro-hello
 exec --no-startup-id xfce4-power-manager
 exec --no-startup-id cmst
@@ -29,8 +29,8 @@ exec --no-startup-id redshift-gtk
 exec --no-startup-id sbxkb
 exec --no-startup-id ff-theme-util
 exec_always --no-startup-id fix_xcursor
-exec_always --no-startup-id "echo conservative | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
 exec_always --no-startup-id "pkill polybar;polybar -r;"
+# exec_always --no-startup-id "xborders -c ~/.config/xborder/config.json"
 
 # add the arabic language to the keyboard with win space to toggle between them.
 exec_always --no-startup-id bash ~/.config/set-multilingual-keyboard.sh
@@ -59,10 +59,10 @@ bindsym $mod+d exec --no-startup-id dmenu_recency
 bindsym $mod+z exec --no-startup-id morc_menu
 bindsym $mod+Ctrl+b exec --no-startup-id terminal -e 'bmenu' 
 bindsym $mod+F1 exec --no-startup-id brave 
-bindsym $mod+F2 exec --no-startup-id discord 
+bindsym $mod+F2 exec --no-startup-id whatsapp-nativefier
 bindsym $mod+F3 exec --no-startup-id thunar
-bindsym $mod+F4 exec --no-startup-id ~/messenger-linux-x64/messenger
-bindsym $mod+F5 exec --no-startup-id whatsapp-nativefier
+bindsym $mod+F4 exec --no-startup-id discord 
+bindsym $mod+F5 exec --no-startup-id messenger-nativefier
 
 # bindsym $mod+F3 exec ranger
 bindsym $mod+Shift+F3 exec --no-startup-id pcmanfm_pkexec 
@@ -153,7 +153,7 @@ bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'You pressed 
 
 bindsym $mod+0 mode "$mode_system" \
 exec --no-startup-id \
-"i3-nagbar -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'\
+"i3-nagbar -t warning -m '(l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown'\
 -B 'Lock'        'pkill i3-nagbar;i3 mode default;i3exit lock;' \
 -B 'Log out'     'pkill i3-nagbar;i3 mode default;i3exit logout;' \
 -B 'Switch User' 'pkill i3-nagbar;i3 mode default;i3exit switch_user;' \
@@ -165,13 +165,13 @@ exec --no-startup-id \
 
 set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id "pkill i3-nagbar;i3exit lock;" mode "default"
-    bindsym s exec --no-startup-id "pkill i3-nagbar;i3exit suspend;" mode "default"
-    bindsym u exec --no-startup-id "pkill i3-nagbar;i3exit switch_user;" mode "default"
-    bindsym e exec --no-startup-id "pkill i3-nagbar;i3exit logout;" mode "default"
-    bindsym h exec --no-startup-id "pkill i3-nagbar;sync && sudo sysctl -w vm.drop_caches=3 && sudo sysctl -w vm.drop_caches=2; i3exit hibernate;", mode "default"
-    bindsym r exec --no-startup-id "pkill i3-nagbar;i3exit reboot", mode "default"
-    bindsym Shift+s exec --no-startup-id "pkill i3-nagbar;i3exit shutdown", mode "default"
+    bindsym l       exec --no-startup-id "pkill i3-nagbar;i3exit lock;"               mode "default"
+    bindsym s       exec --no-startup-id "pkill i3-nagbar;i3exit suspend;"            mode "default"
+    bindsym u       exec --no-startup-id "pkill i3-nagbar;i3exit switch_user;"        mode "default"
+    bindsym e       exec --no-startup-id "pkill i3-nagbar;i3exit logout;"             mode "default"
+    bindsym h       exec --no-startup-id "pkill i3-nagbar;i3exit hibernate;",         mode "default"
+    bindsym r       exec --no-startup-id "pkill i3-nagbar;i3exit reboot",             mode "default"
+    bindsym Shift+s exec --no-startup-id "pkill i3-nagbar;i3exit shutdown",           mode "default"
 
     # exit system mode: "Enter" or "Escape"
     bindsym Return mode "default" exec --no-startup-id pkill i3-nagbar
@@ -186,8 +186,8 @@ mode "$mode_system" {
 #############################
 
 # Set inner/outer gaps
-gaps inner 20
-gaps outer -3
+gaps inner 10
+gaps outer -5
 
 # Additionally, you can issue commands with the following syntax. This is useful to bind keys to changing the gap size.
 # gaps inner|outer current|all set|plus|minus <px>
@@ -204,15 +204,29 @@ gaps outer -3
 
 # Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
 set $mode_gaps Gaps: (o) outer, (i) inner
+
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+
 set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
-bindsym $mod+Shift+g mode "$mode_gaps"
+
+bindsym $mod+Shift+g mode "$mode_gaps"\
+exec --no-startup-id \
+"i3-nagbar -t warning -m 'Gaps: (o) outer, (i) inner' \
+-B 'i'      'i3 mode $mode_gaps_inner;' \
+-B 'o'      'i3 mode $mode_gaps_outer;' \
+-B 'Do nothing'  'i3 mode default;pkill i3-nagbar;'\"
+
+
 
 mode "$mode_gaps" {
-        bindsym o      mode "$mode_gaps_outer"
-        bindsym i      mode "$mode_gaps_inner"
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+        bindsym o      mode "$mode_gaps_outer"\
+                        exec --no-startup-id \
+                        "pkill i3-nagbar;i3-nagbar -t warning -m 'Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)'"
+        bindsym i      mode "$mode_gaps_inner"\
+                        exec --no-startup-id \
+                        "pkill i3-nagbar;i3-nagbar -t warning -m 'Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)'"
+        bindsym Return exec "pkill i3-nagbar;", mode default; 
+        bindsym Escape exec "pkill i3-nagbar;", mode default; 
 }
 mode "$mode_gaps_inner" {
         bindsym plus  gaps inner current plus 5
@@ -223,8 +237,8 @@ mode "$mode_gaps_inner" {
         bindsym Shift+minus gaps inner all minus 5
         bindsym Shift+0     gaps inner all set 0
 
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+        bindsym Return exec "pkill i3-nagbar;", mode default; 
+        bindsym Escape exec "pkill i3-nagbar;", mode default; 
 }
 mode "$mode_gaps_outer" {
         bindsym plus  gaps outer current plus 5
@@ -235,8 +249,8 @@ mode "$mode_gaps_outer" {
         bindsym Shift+minus gaps outer all minus 5
         bindsym Shift+0     gaps outer all set 0
 
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
+        bindsym Return exec "pkill i3-nagbar;", mode default; 
+        bindsym Escape exec "pkill i3-nagbar;", mode default; 
 } 
 
 
@@ -245,7 +259,7 @@ bindsym $mod+m bar mode toggle
 
 # Theme colors
 # class                   border  backgr. text    indic.   child_border
-  client.focused          #556064 #556064 #80FFF9 #FDF6E3
+  client.focused          #556064 #5FFf64 #80FFF9 #FDF6E3
   client.focused_inactive #2F3D44 #2F3D44 #1ABC9C #454948
   client.unfocused        #2F3D44 #2F3D44 #1ABC9C #454948
   client.urgent           #CB4B16 #FDF6E3 #1ABC9C #268BD2
